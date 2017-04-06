@@ -1,0 +1,63 @@
+#!/bin/bash
+set -e
+set -u
+SESSIONNAME=""
+SESSIONDIR=""
+TMUXRESURECT="$HOME/.tmux/plugins/tmux-resurrect"
+###############################################################################
+# Function Define of Help message
+###############################################################################
+function usage {
+cat << EOT
+Tool to save a tmux session with tmux-resurrect.
+-------------------------------------------------------------------------------
+$(basename "$0") [OPTIONS] [SESSION NAME]
+
+OPTIONS:
+    -h | --help     print this help message.
+
+SESSION NAME:
+    tmux session name wich should be generated.
+EOT
+}
+###############################################################################
+# echo to stderr
+###############################################################################
+echoerr() {
+    echo "$@" 1>&2;
+}
+###############################################################################
+# commandline loop
+###############################################################################
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+while [ $# -gt 0 ]; do
+    case $1 in
+        -h | --help ) usage
+                    exit 1
+                    ;;
+        * )         SESSIONNAME=$1
+                    ;;
+    esac
+    shift
+done
+###############################################################################
+# main loop
+###############################################################################
+last="$HOME/.tmux/resurrect/last"
+
+sessionFile="$SESSIONDIR/${SESSIONNAME}.session"
+if [ -f "$sessionFile" ]; then
+    echoerr "Error: Session already exists! SessionFile: $sessionFile"
+    exit 1;
+fi
+
+if [ -f "$last" ]; then
+    cp -v "$last" "$sessionFile"
+else
+    echoerr "Warning: last is not set!!"
+    exit 1
+fi
+

@@ -1,0 +1,7 @@
+pane	devel	1	:Library	0	: 	0	:/opt	1	bash	:
+pane	devel	2	:Schroot	0	:-	0	:~/workspace	1	bash	:
+pane	devel	3	:testsuite	1	:*	0	:~/workspace	1	bash	:
+window	devel	1	0	: 	b35d,211x61,0,0,0
+window	devel	2	0	:-	b360,211x61,0,0,3
+window	devel	3	1	:*	b361,211x61,0,0,4
+state	devel	devel

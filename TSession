@@ -1,0 +1,79 @@
+#!/bin/bash
+set -e
+set -u
+SESSIONNAME=""
+SESSIONDIR=""
+TMUXRESURECT="$HOME/.tmux/plugins/tmux-resurrect"
+###############################################################################
+# Function Define of Help message
+###############################################################################
+function usage {
+cat << EOT
+Tool to restore a tmux session with tmux-resurrect.
+-------------------------------------------------------------------------------
+$(basename "$0") [OPTIONS] [SESSION NAME]
+
+OPTIONS:
+    -h | --help     print this help message.
+
+SESSION NAME:
+    tmux session name wich should be restored.
+EOT
+}
+
+###############################################################################
+# echo to stderr
+###############################################################################
+echoerr() {
+    echo "$@" 1>&2;
+}
+###############################################################################
+# commandline loop
+###############################################################################
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+while [ $# -gt 0 ]; do
+    case $1 in
+        -h | --help ) usage
+                    exit 1
+                    ;;
+        * )         SESSIONNAME=$1
+                    ;;
+    esac
+    shift
+done
+
+#register cleanup trap
+function cleanup() {
+    trap ":" INT QUIT TERM HUP EXIT
+    #restore saved link
+    ln -s -v "$oldstate" "$last"
+}
+###############################################################################
+# main loop
+###############################################################################
+last="$HOME/.tmux/resurrect/last"
+# save link to actual last session.
+oldstate="$(realpath "$last")"
+
+#delete link
+if [ -f "$last" ]; then
+    trap "cleanup" INT QUIT TERM HUP EXIT
+    rm -v "$last"
+else
+    echoerr "Warning: last is not set!!"
+    exit 1
+fi
+sessionFile="$SESSIONDIR/$SESSIONNAME"
+if [ -f "$sessionFile" ]; then
+    ln -s -v "$sessionFile" "$last"
+    "$TMUXRESURECT/scripts/restore.sh"
+    rm -v "$last"
+else
+    echoerr "Error: Session $SESSIONNAME does not exist! SessionFile: $sessionFile"
+    exit 1
+fi
+
+

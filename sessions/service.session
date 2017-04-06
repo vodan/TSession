@@ -1,0 +1,5 @@
+pane	service	1	:music	0	:-	0	:~/	1	bash	:
+pane	service	2	:doc	1	:*	0	:~/	1	bash	:
+window	service	1	0	:-	d1be,139x39,0,0,1
+window	service	2	1	:*	d1bf,139x39,0,0,2
+state	service	service
