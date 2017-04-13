@@ -5,7 +5,7 @@ SESSIONS = ./sessions/*
 PREFIX = $(DESTDIR)/usr/local
 BINDIR = $(PREFIX)/bin
 DATAROOTDIR = $(PREFIX)/share
-DATADIR = $(DATAROOTDIR)/$(TARGET)
+DATADIR = $(DATAROOTDIR)/$(TARGET1)
 SESSIONDIR = $(DATADIR)/sessions
 
 ifeq ($(COMPLETION_DIR),)
@@ -29,7 +29,6 @@ install-copy: $(DATADIR) $(SESSIONDIR)
 
 install_completion:
 	install -D bash_completion.sh $(COMPLETION_DIR)/$(TARGET1)
-
 
 uninstall:
 	-rm $(BINDIR)/$(TARGET1)
